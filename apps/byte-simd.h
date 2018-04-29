@@ -32,7 +32,7 @@
 #include "utils.h"
 #include <stdio.h>
 #include <string.h>
-#include "streamvbyte.h"
+#include "streamvbytedelta.h"
 
 #define LAST_BIT_SET(b) (b & (0x80))
 #define EDGE_SIZE_PER_BYTE 7
@@ -261,6 +261,12 @@ inline size_t pack(P pred, uchar* edge_start, const uintE &source, const uintE &
 long sequentialCompressEdgeSet(uchar *edgeArray, long currentOffset, uintT degree,
                                 uintE vertexNum, uintE *savedEdges) {
   if (degree > 0) {
+    /*
+    size_t numBytes = streamvbyte_delta_encode((uint32_t *) savedEdges, degree,
+       (uint8_t *) edgeArray, vertexNum);
+    currentOffset += numBytes;
+    */
+    
     // Compress the first edge whole, which is signed difference coded
     currentOffset = compressFirstEdge(edgeArray, currentOffset,
                                        vertexNum, savedEdges[0]);
@@ -270,6 +276,7 @@ long sequentialCompressEdgeSet(uchar *edgeArray, long currentOffset, uintT degre
                         savedEdges[edgeI - 1];
       currentOffset = compressEdge(edgeArray, currentOffset, difference);
     }
+    
     // Increment nWritten after all of vertex n's neighbors are written
   }
   return currentOffset;

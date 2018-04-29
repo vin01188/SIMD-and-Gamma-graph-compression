@@ -13,7 +13,6 @@
 // this information ought to be stored somehow.
 // There is no alignment requirement on the "in" pointer.
 // The out pointer should point to length * sizeof(uint32_t) bytes.
-#include "streamvbyte.h"
 
 #if defined(_MSC_VER)
 /* Microsoft C/C++-compatible compiler */
@@ -268,7 +267,6 @@ size_t streamvbyte_encode(uint32_t *in, uint32_t count, uint8_t *out) {
   uint8_t *dataPtr = keyPtr + keyLen; // variable byte data after all keys
 
 #if defined(__AVX__) || defined(__ARM_NEON__)
-
   uint32_t count_quads = count / 4;
   count -= 4 * count_quads;
 
