@@ -33,6 +33,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "streamvbytedelta.h"
+#include "gettime.h"
 
 #define LAST_BIT_SET(b) (b & (0x80))
 #define EDGE_SIZE_PER_BYTE 7
@@ -287,6 +288,8 @@ long sequentialCompressEdgeSet(uchar *edgeArray, long currentOffset, uintT degre
 */
 uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE* Degrees) {
   cout << "parallel compressing, (n,m) = (" << n << "," << m << ")" << endl;
+  timer t = timer();
+  t.start();
   uintE **edgePts = newA(uintE*, n);
   long *charsUsedArr = newA(long, n);
   long *compressionStarts = newA(long, n+1);
@@ -296,6 +299,8 @@ uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE
   long toAlloc = sequence::plusScan(charsUsedArr,charsUsedArr,n);
   uintE* iEdges = newA(uintE,toAlloc);
 
+  timer t2 = timer();
+  t2.start();
   {parallel_for(long i=0; i<n; i++) {
       edgePts[i] = iEdges+charsUsedArr[i];
       long charsUsed =
@@ -304,7 +309,8 @@ uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE
           i, edges + offsets[i]);
       charsUsedArr[i] = charsUsed;
   }}
-
+  t2.stop();
+  t2.reportTotal("Inside Running Time: ");
   // produce the total space needed for all compressed lists in chars.
   long totalSpace = sequence::plusScan(charsUsedArr, compressionStarts, n);
   compressionStarts[n] = totalSpace;
@@ -324,6 +330,8 @@ uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE
   free(iEdges);
   free(edgePts);
   free(compressionStarts);
+  t.stop();
+  t.reportTotal("Running time: ");
   cout << "finished compressing, bytes used = " << totalSpace << endl;
   cout << "would have been, " << (m * 4) << endl;
   return ((uintE *)finalArr);
@@ -374,6 +382,7 @@ long sequentialCompressWeightedEdgeSet
 */
 uchar *parallelCompressWeightedEdges(intEPair *edges, uintT *offsets, long n, long m, uintE* Degrees) {
   cout << "parallel compressing, (n,m) = (" << n << "," << m << ")" << endl;
+
   uintE **edgePts = newA(uintE*, n);
   long *charsUsedArr = newA(long, n);
   long *compressionStarts = newA(long, n+1);
