@@ -32,6 +32,7 @@
 #include "utils.h"
 #include <stdio.h>
 #include <string.h>
+#include "streamvbyte.h"
 
 #define LAST_BIT_SET(b) (b & (0x80))
 #define EDGE_SIZE_PER_BYTE 7
@@ -41,6 +42,7 @@ typedef unsigned char uchar;
 /* Reads the first edge of an out-edge list, which is the signed
    difference between the target and source.
 */
+
 
 inline intE eatWeight(uchar* &start) {
   uchar fb = *start++;
