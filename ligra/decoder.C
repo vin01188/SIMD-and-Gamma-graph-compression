@@ -24,7 +24,9 @@
 
 //include the code for the desired compression scheme
 #ifndef PD 
-#ifdef BYTE
+#ifdef BYTESIMD
+#include "byte-simd.h"
+#elif defined BYTE
 #include "byte.h"
 #elif defined NIBBLE
 #include "nibble.h"

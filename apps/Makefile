@@ -1,3 +1,5 @@
+BYTESIMD = 1
+
 ifdef LONG
 INTT = -DLONG
 endif
@@ -10,7 +12,9 @@ ifdef PD
 PD = -DPD
 endif
 
-ifdef BYTE
+ifdef BYTESIMD
+CODE = -DBYTESIMD
+else ifdef BYTE
 CODE = -DBYTE
 else ifdef NIBBLE
 CODE = -DNIBBLE
@@ -43,7 +47,9 @@ endif
 
 COMMON= ligra.h graph.h compressedVertex.h vertex.h utils.h IO.h parallel.h gettime.h index_map.h maybe.h sequence.h edgeMap_utils.h binary_search.h quickSort.h blockRadixSort.h transpose.h parseCommandLine.h byte.h byteRLE.h nibble.h byte-pd.h byteRLE-pd.h nibble-pd.h vertexSubset.h encoder.C decoder.C
 
-ALL= encoder decoder BFS BC BellmanFord Components Radii PageRank PageRankDelta BFSCC BFS-Bitvector KCore MIS Triangle CF
+# ALL= encoder decoder BFS BC BellmanFord Components Radii PageRank PageRankDelta BFSCC BFS-Bitvector KCore MIS Triangle CF
+
+ALL = encoder decoder BFS 
 
 all: $(ALL)
 
