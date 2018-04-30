@@ -42,6 +42,8 @@
 
 typedef unsigned char uchar;
 
+uint32_t recover[100000];
+
 /* Reads the first edge of an out-edge list, which is the signed
    difference between the target and source.
 */
@@ -111,11 +113,10 @@ template <class T>
   size_t edgesRead = 0;
   if (degree > 0) {
     if (SIMD_DECODE) {
-      uint32_t *recover = (uint32_t *) calloc(degree, sizeof(uint32_t));
       streamvbyte_delta_decode(edgeStart, recover, degree, source);
-      for (edgesRead = 0 ; edgesRead < degree; edgesRead++) {
+      for (edgesRead = 0; edgesRead < degree; edgesRead++) {
         uintE edge = recover[edgesRead];
-        if (!t.srcTarg(source,edge, edgesRead)) {
+        if (!t.srcTarg(source, edge, edgesRead)) {
           break;
         }
       }
@@ -322,11 +323,12 @@ uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE
   for(int j = 0 ; j < 10000; j++) {
     streamvbyte_delta_decode(arr1, dest, 50000, 0);
   }
+  t3.reportTotal("Encoding time: ");
+
   */
 
 
   
-  t3.reportTotal("Encoding time: ");
 
   timer t = timer();
   t.start();

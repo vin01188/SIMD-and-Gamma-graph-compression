@@ -99,9 +99,9 @@ struct timer {
     std::cout << str << " : "; 
     reportTotal();}
 
-  void reportNext() {reportTime(next());}
+  double reportNext() { double t = next(); reportTime(t); return t;}
 
-  void reportNext(std::string str) {std::cout << str << " : "; reportNext();}
+  double reportNext(std::string str) {std::cout << str << " : "; return reportNext();}
 };
 
 static timer _tm;
