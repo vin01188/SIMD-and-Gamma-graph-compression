@@ -24,6 +24,8 @@
 #ifndef BYTECODE_H
 #define BYTECODE_H
 
+#define SIMD_DECODE true
+
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
@@ -107,37 +109,33 @@ inline uintE eatEdge(uchar* &start) {
 template <class T>
   inline void decode(T t, uchar* edgeStart, const uintE &source, const uintT &degree, const bool par=true) {
   size_t edgesRead = 0;
-
-/*
   if (degree > 0) {
-    uint32_t *recover = (uint32_t *) calloc(degree, sizeof(uint32_t));
-    streamvbyte_delta_decode(edgeStart, recover, degree, source);
-    for (edgesRead = 0 ; edgesRead < degree; edgesRead++) {
-      uintE edge = recover[edgesRead];
-      if (!t.srcTarg(source,edge, edgesRead)) {
-        break;
+    if (SIMD_DECODE) {
+      uint32_t *recover = (uint32_t *) calloc(degree, sizeof(uint32_t));
+      streamvbyte_delta_decode(edgeStart, recover, degree, source);
+      for (edgesRead = 0 ; edgesRead < degree; edgesRead++) {
+        uintE edge = recover[edgesRead];
+        if (!t.srcTarg(source,edge, edgesRead)) {
+          break;
+        }
       }
-    }
-  }
-*/
-
-  if (degree > 0) {
+    } else {
     // Eat first edge, which is compressed specially
-    uintE startEdge = eatFirstEdge(edgeStart,source);
-    if (!t.srcTarg(source,startEdge,edgesRead)) {
-      return;
-    }
-    for (edgesRead = 1; edgesRead < degree; edgesRead++) {
-      // Eat the next 'edge', which is a difference, and reconstruct edge.
-      uintE edgeRead = eatEdge(edgeStart);
-      uintE edge = startEdge + edgeRead;
-      startEdge = edge;
-      if (!t.srcTarg(source, edge, edgesRead)) {
-        break;
+      uintE startEdge = eatFirstEdge(edgeStart,source);
+      if (!t.srcTarg(source,startEdge,edgesRead)) {
+        return;
+      }
+      for (edgesRead = 1; edgesRead < degree; edgesRead++) {
+        // Eat the next 'edge', which is a difference, and reconstruct edge.
+        uintE edgeRead = eatEdge(edgeStart);
+        uintE edge = startEdge + edgeRead;
+        startEdge = edge;
+        if (!t.srcTarg(source, edge, edgesRead)) {
+          break;
+        }
       }
     }
   }
-  
 }
 
 //decode edges for weighted graph
@@ -277,23 +275,21 @@ inline size_t pack(P pred, uchar* edge_start, const uintE &source, const uintE &
 long sequentialCompressEdgeSet(uchar *edgeArray, long currentOffset, uintT degree,
                                 uintE vertexNum, uintE *savedEdges) {
   if (degree > 0) {
-    /*
-    size_t numBytes = streamvbyte_delta_encode((uint32_t *) savedEdges, degree,
-       (uint8_t *) edgeArray, vertexNum);
-    currentOffset += numBytes;
-    */
-    
-    // Compress the first edge whole, which is signed difference coded
-    currentOffset = compressFirstEdge(edgeArray, currentOffset,
-                                       vertexNum, savedEdges[0]);
-    for (uintT edgeI=1; edgeI < degree; edgeI++) {
-      // Store difference between cur and prev edge.
-      uintE difference = savedEdges[edgeI] -
-                        savedEdges[edgeI - 1];
-      currentOffset = compressEdge(edgeArray, currentOffset, difference);
+    if (SIMD_DECODE) {
+      size_t numBytes = streamvbyte_delta_encode((uint32_t *) savedEdges, degree,
+         (uint8_t *) edgeArray, vertexNum);
+      currentOffset += numBytes;
+    } else {
+      // Compress the first edge whole, which is signed difference coded
+      currentOffset = compressFirstEdge(edgeArray, currentOffset,
+                                         vertexNum, savedEdges[0]);
+      for (uintT edgeI=1; edgeI < degree; edgeI++) {
+        // Store difference between cur and prev edge.
+        uintE difference = savedEdges[edgeI] -
+                          savedEdges[edgeI - 1];
+        currentOffset = compressEdge(edgeArray, currentOffset, difference);
+      }
     }
-    
-    // Increment nWritten after all of vertex n's neighbors are written
   }
   return currentOffset;
 }
