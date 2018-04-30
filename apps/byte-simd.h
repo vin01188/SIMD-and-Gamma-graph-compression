@@ -107,6 +107,20 @@ inline uintE eatEdge(uchar* &start) {
 template <class T>
   inline void decode(T t, uchar* edgeStart, const uintE &source, const uintT &degree, const bool par=true) {
   size_t edgesRead = 0;
+
+/*
+  if (degree > 0) {
+    uint32_t *recover = (uint32_t *) calloc(degree, sizeof(uint32_t));
+    streamvbyte_delta_decode(edgeStart, recover, degree, source);
+    for (edgesRead = 0 ; edgesRead < degree; edgesRead++) {
+      uintE edge = recover[edgesRead];
+      if (!t.srcTarg(source,edge, edgesRead)) {
+        break;
+      }
+    }
+  }
+*/
+
   if (degree > 0) {
     // Eat first edge, which is compressed specially
     uintE startEdge = eatFirstEdge(edgeStart,source);
@@ -123,6 +137,7 @@ template <class T>
       }
     }
   }
+  
 }
 
 //decode edges for weighted graph
