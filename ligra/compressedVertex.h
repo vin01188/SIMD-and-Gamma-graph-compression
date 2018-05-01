@@ -4,6 +4,8 @@
 #ifndef PD
 #ifdef BYTESIMD
 #include "byte-simd.h"
+#elif defined GAMMA
+#include "gamma.h"
 #elif defined BYTE
 #include "byte.h"
 #elif defined NIBBLE
