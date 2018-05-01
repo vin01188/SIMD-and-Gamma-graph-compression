@@ -18,6 +18,8 @@ Next, navigate to the apps folder and run Make. To run the code on the wiki grap
 ./BFS -s -c ../inputs/wiki-Talk-SIMD
 ```
 
+The other available graphs are ../inputs/connectedGraph, ../inputs/rMatGraph_J_5_100, and ../inputs/amazon0312-1. 
+
 To run other graph algorithms, modify the Makefile to build all the graph algorithms
 by editing the following line with additional algorithms:
 
