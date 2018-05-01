@@ -300,6 +300,7 @@ long sequentialCompressEdgeSet(uchar *edgeArray, long currentOffset, uintT degre
 */
 uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE* Degrees) {
   cout << "parallel compressing, (n,m) = (" << n << "," << m << ")" << endl;
+<<<<<<< HEAD
   
   /*
   uint32_t * arr = (uint32_t*) calloc(50000, sizeof(uint32_t));
@@ -329,6 +330,8 @@ uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE
 
 
   
+=======
+>>>>>>> 49f4d9b3794a6e9a4ee2505badd06aaba1b492ef
 
   timer t = timer();
   t.start();

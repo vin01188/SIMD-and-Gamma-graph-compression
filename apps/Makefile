@@ -49,7 +49,7 @@ COMMON= streamvbyte_shuffle_tables.h streamvbyte.h streamvbytedelta.h ligra.h gr
 
 # ALL= encoder decoder BFS BC BellmanFord Components Radii PageRank PageRankDelta BFSCC BFS-Bitvector KCore MIS Triangle CF
 
-ALL = encoder decoder BFS PageRank
+ALL = encoder decoder BFS simpleBenchmark
 
 all: $(ALL)
 
