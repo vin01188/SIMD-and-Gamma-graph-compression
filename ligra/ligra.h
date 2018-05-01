@@ -469,6 +469,7 @@ int parallel_main(int argc, char* argv[]) {
   bool mmap = P.getOptionValue("-m");
   //cout << "mmap = " << mmap << endl;
   long rounds = P.getOptionLongValue("-rounds",3);
+  double totalTime = 0.0;
   if (compressed) {
     if (symmetric) {
       graph<compressedSymmetricVertex> G =
@@ -477,7 +478,7 @@ int parallel_main(int argc, char* argv[]) {
       for(int r=0;r<rounds;r++) {
         startTime();
         Compute(G,P);
-        nextTime("Running time");
+        totalTime += nextTime("Running time");
       }
       G.del();
     } else {
@@ -488,7 +489,7 @@ int parallel_main(int argc, char* argv[]) {
       for(int r=0;r<rounds;r++) {
         startTime();
         Compute(G,P);
-        nextTime("Running time");
+        totalTime += nextTime("Running time");
         if(G.transposed) G.transpose();
       }
       G.del();
@@ -501,7 +502,7 @@ int parallel_main(int argc, char* argv[]) {
       for(int r=0;r<rounds;r++) {
         startTime();
         Compute(G,P);
-        nextTime("Running time");
+        totalTime += nextTime("Running time");
       }
       G.del();
     } else {
@@ -512,11 +513,12 @@ int parallel_main(int argc, char* argv[]) {
       for(int r=0;r<rounds;r++) {
         startTime();
         Compute(G,P);
-        nextTime("Running time");
+        totalTime += nextTime("Running time");
         if(G.transposed) G.transpose();
       }
       G.del();
     }
   }
+  printf("Average: %.7f\n", totalTime / rounds);
 }
 #endif
