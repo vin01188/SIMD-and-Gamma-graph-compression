@@ -42,7 +42,7 @@
 
 typedef unsigned char uchar;
 
-uint32_t recover[100000];
+uint32_t recover[2594385];
 
 /* Reads the first edge of an out-edge list, which is the signed
    difference between the target and source.

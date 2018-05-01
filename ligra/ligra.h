@@ -519,6 +519,6 @@ int parallel_main(int argc, char* argv[]) {
       G.del();
     }
   }
-  printf("Average: %.4f\n", totalTime / rounds);
+  printf("Average: %.7f\n", totalTime / rounds);
 }
 #endif

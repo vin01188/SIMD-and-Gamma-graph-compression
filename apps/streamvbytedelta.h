@@ -32,7 +32,7 @@ extern "C" {
 #endif
 
 #ifdef __AVX__
-
+#undef __AVX__
 #include "streamvbyte_shuffle_tables.h"
 
 #endif
