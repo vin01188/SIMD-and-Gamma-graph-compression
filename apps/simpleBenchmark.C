@@ -227,12 +227,6 @@ void benchmarkRandom() {
  		decode(arr1, dest, 0, 50000);
  	}
  	t5.reportTotal("Random Array Byte decoding time: ");
-
-  for(int j = 0; j < 10000; j++) {
-  	if (dest[j] != arr[j]) {
-  		printf("Mismatch %d %d \n", dest[j], arr[j]);
-  	}
-  }
   free(arr);
   free(dest);
 }
