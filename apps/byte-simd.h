@@ -300,38 +300,6 @@ long sequentialCompressEdgeSet(uchar *edgeArray, long currentOffset, uintT degre
 */
 uintE *parallelCompressEdges(uintE *edges, uintT *offsets, long n, long m, uintE* Degrees) {
   cout << "parallel compressing, (n,m) = (" << n << "," << m << ")" << endl;
-<<<<<<< HEAD
-  
-  /*
-  uint32_t * arr = (uint32_t*) calloc(50000, sizeof(uint32_t));
-  uint32_t* dest = (uint32_t*) calloc(50000, sizeof(uint32_t));
-
-  uchar *arr1 = (uchar *) calloc(300000, sizeof(uchar));
-
-  srand(time(NULL));
-
-  for(int i = 0; i < 50000; i++) {
-    arr[i] = i;
-  }
-  timer t3 = timer();
-  streamvbyte_delta_encode(arr, 50000, (uint8_t *)arr1,0);
-
-  t3.start();
-  for( int j = 0 ; j < 10000 ; j++) {
-  streamvbyte_delta_encode(arr, 50000, (uint8_t *)arr1,0);
-  }
-
-  for(int j = 0 ; j < 10000; j++) {
-    streamvbyte_delta_decode(arr1, dest, 50000, 0);
-  }
-  t3.reportTotal("Encoding time: ");
-
-  */
-
-
-  
-=======
->>>>>>> 49f4d9b3794a6e9a4ee2505badd06aaba1b492ef
 
   timer t = timer();
   t.start();
