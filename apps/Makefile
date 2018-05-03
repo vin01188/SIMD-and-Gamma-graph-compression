@@ -1,4 +1,4 @@
-GAMMA = 1
+BYTESIMD = 1
 
 ifdef LONG
 INTT = -DLONG
