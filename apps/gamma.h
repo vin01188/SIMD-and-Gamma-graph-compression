@@ -60,7 +60,7 @@ template <class T>
   if (degree > 0) {
     uchar curChar = edgeStart[curOffset];
     int curCharOffset = 0;
-    uintE startEdge = 0;
+    uintE startEdge = -1;
     for (int i = 0; i < degree; i++) {
       uintE edge_diff = 0;
       int length = 0;
@@ -77,7 +77,7 @@ template <class T>
           break;
         }
       }
-      for (int j = 0; j < length; j++) {
+      for (int j = 0; j < length - 1; j++) {
         int bit = get_bit(curChar, curCharOffset);
         curCharOffset++;
         if (curCharOffset == 8) {
@@ -87,6 +87,7 @@ template <class T>
         }
         edge_diff |= bit << j;
       }
+      edge_diff |= 1 << (length - 1);
       uintE edge = startEdge + edge_diff;
       startEdge = edge;
       if (!t.srcTarg(source, edge, i)) {
@@ -155,7 +156,7 @@ long compressEdge(uintE bitsetOffset, uintE e) {
   set_bitset(curOffset, 1);
   curOffset++;
   // This is like a backwards gamma code
-  for (int i = 0; i <= hib; i++) {
+  for (int i = 0; i < hib; i++) {
     set_bitset(curOffset, e & 0x1);
     e >>= 1;
     curOffset++;
@@ -176,7 +177,7 @@ long flush_bit_set(uintE bitsetOffset, uchar *edgeArray, long currentOffset, boo
     edgeArray[currentOffset] = bits_store[i];
     currentOffset++;
   }
-  bits_store[0] = bits_store[num_flush + 1];
+  bits_store[0] = bits_store[num_flush];
   return currentOffset;
 }
 
@@ -196,7 +197,7 @@ long sequentialCompressEdgeSet(uchar *edgeArray, long currentOffset, uintT degre
   if (degree > 0) {
     int bitsetOffset = 0;
     // This does not work when numbers are too big.
-    bitsetOffset = compressEdge(bitsetOffset, savedEdges[0]);
+    bitsetOffset = compressEdge(bitsetOffset, savedEdges[0] + 1);
     for (uintT edgeI=1; edgeI < degree; edgeI++) {
       // Store difference between cur and prev edge.
       uintE difference = savedEdges[edgeI] -
