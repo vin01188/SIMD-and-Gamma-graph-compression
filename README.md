@@ -1,6 +1,10 @@
 15853 Project
 ======================
 
+Report
+--------
+[Link to Report](https://github.com/vin01188/SIMD-and-Gamma-graph-compression/blob/master/15853-project.pdf)
+
 Usage
 --------
 
